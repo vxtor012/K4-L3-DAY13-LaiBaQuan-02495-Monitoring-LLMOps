@@ -8,7 +8,7 @@
 - **MSSV:** 2A202602495
 - **Lớp:** K4-L3A
 - **Repository URL:** https://github.com/vxtor012/K4-L3-DAY13-LaiBaQuan-02495-Monitoring-LLMOps
-- **Commit SHA cuối:**
+- **Commit SHA cuối:** `eb43d245f174a4d7ba7a640ad4227273d00838ae`
 - **Challenge ID:** `day13-k4-l3a-monitoring-llmops-v1`
 - **Tên project Langfuse cá nhân:** `day13-k4-l3a-02495`
 
