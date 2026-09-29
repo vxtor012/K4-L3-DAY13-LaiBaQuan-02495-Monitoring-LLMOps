@@ -1,0 +1,37 @@
+=== INCIDENT TRACE WATERFALL EVIDENCE ===
+Project: day13-k4-l3a-02495
+Challenge ID: day13-k4-l3a-monitoring-llmops-v1
+Correlation ID: req-a4c32886
+Trace ID: c21a8411b84a0daf36243a5ef947029c
+
+Span Waterfall Hierarchy & Breakdown:
+lab-agent-run [AGENT] (Total Duration: 3.456s)
+  ├── retrieval [RETRIEVER] (Duration: 2.501s) ---> ROOT CAUSE OF BOTTLENECK (94.2% of total duration)
+  └── generation [GENERATION] (Duration: 0.153s) ---> HEALTHY (Fast execution)
+
+Span Details:
+1. Root Observation:
+   - Name: lab-agent-run
+   - Type: AGENT
+   - Latency: 3.456s
+   - Environment: dev
+   - Tags: ['lab', 'monitoring', 'claude-sonnet-4-5']
+   - Metadata: {correlation_id: req-a4c32886, feature: monitoring, model: claude-sonnet-4-5, doc_count: 1, prompt_name: day13-chat, prompt_version: 1}
+
+2. Child Observation (retrieval):
+   - Name: retrieval
+   - Type: RETRIEVER
+   - Latency: 2.501s
+   - Parent: lab-agent-run
+
+3. Child Observation (generation):
+   - Name: generation
+   - Type: GENERATION
+   - Latency: 0.153s
+   - Model: claude-sonnet-4-5
+   - TTFT: 50ms
+   - Usage: {input: 36, output: 124, total: 160 tokens}
+   - Parent: lab-agent-run
+
+Definitive Conclusion:
+The 2.5s delay in the retrieval span accounts for 3.456s total latency, pinpointing the incident 'rag_slow' in the document retrieval component.

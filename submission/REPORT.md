@@ -9,7 +9,7 @@
 - **Lớp:** K4-L3A
 - **Repository URL:** https://github.com/vxtor012/K4-L3-DAY13-LaiBaQuan-02495-Monitoring-LLMOps
 - **Commit SHA cuối:**
-- **Challenge ID:**
+- **Challenge ID:** `day13-k4-l3a-monitoring-llmops-v1`
 - **Tên project Langfuse cá nhân:** `day13-k4-l3a-02495`
 
 ## 2. Evidence index
@@ -29,9 +29,9 @@
 | Prompt versions | `evidence/09-prompt-versions.txt` |
 | Prompt rollback | `evidence/10-prompt-rollback.txt` |
 | Dashboard runtime | `evidence/11-dashboard-overview.txt` |
-| Incident metric | `evidence/12-incident-metric.png` |
-| Incident log | `evidence/13-incident-log.png` |
-| Incident trace | `evidence/14-incident-trace.png` |
+| Incident metric | `evidence/12-incident-metric.txt` |
+| Incident log | `evidence/13-incident-log.txt` |
+| Incident trace | `evidence/14-incident-trace.txt` |
 
 ## 3. Kết quả kỹ thuật
 
@@ -94,24 +94,42 @@
 
 ## 7. Điều tra challenge
 
-- **Challenge ID:**
-- **Khoảng thời gian điều tra:**
-- **Triệu chứng từ metrics:**
+- **Challenge ID:** `day13-k4-l3a-monitoring-llmops-v1`
+- **Khoảng thời gian điều tra:** `2026-09-29 09:12:25Z – 09:12:40Z`
+- **Triệu chứng từ metrics:** Độ trễ P95 tăng vọt từ ~168ms lên 3,455ms, vi phạm nghiêm trọng ngưỡng SLO (`p95 <= 3000ms`), trong khi error rate vẫn ở mức 0% và retrieval success rate đạt 100%. Các request trong kịch bản challenge đều bị chậm bất thường.
 - **Log line và correlation ID liên quan:**
+  - `correlation_id`: `req-a4c32886`
+  - Log line trích xuất từ `data/logs.jsonl`:
+    ```json
+    {"service": "api", "latency_ms": 3455, "ttft_ms": 50, "tokens_in": 36, "tokens_out": 124, "cost_usd": 0.001968, "quality_score": 0.9, "tool_name": "retrieval", "tool_success": true, "payload": {"answer_preview": "Starter answer. You should improve this output logic and add better quality chec..."}, "event": "response_sent", "user_id_hash": "b2f6ef5394be", "feature": "monitoring", "env": "dev", "session_id": "k4-l3a-challenge-s01", "model": "claude-sonnet-4-5", "correlation_id": "req-a4c32886", "level": "info", "ts": "2026-09-29T09:12:29.026151Z"}
+    ```
 - **Trace ID và span gây ảnh hưởng:**
-- **Root cause:**
+  - Trace ID: `c21a8411b84a0daf36243a5ef947029c` (thuộc project Langfuse `day13-k4-l3a-02495`).
+  - Span gây ảnh hưởng: Child span `retrieval` (loại `RETRIEVER`) có thời gian thực thi lên tới 2.501s (chiếm 94.2% tổng thời gian request 3.456s), trong khi span `generation` chỉ mất 0.153s.
+- **Root cause:** Thành phần truy xuất dữ liệu RAG (`retrieve()`) bị nghẽn độ trễ do incident `rag_slow` gây ra (mô phỏng vector store bị trễ 2.5s khi truy vấn tài liệu cho feature `monitoring`).
 - **Fix action:**
+  1. Tắt incident cờ `rag_slow` bằng lệnh `python scripts/inject_incident.py --disable`.
+  2. Trong môi trường thực tế: Kiểm tra kết nối và chỉ mục của Vector Database (Pinecone/Milvus/Qdrant), scale-up tài nguyên read replica, hoặc kích hoạt semantic cache cho các truy vấn phổ biến.
 - **Preventive measure:**
+  1. Thiết lập timeout chặt chẽ cho bước retrieval (ví dụ: timeout 1.5s). Nếu quá thời gian, tự động fallback sang kết quả cache hoặc bộ tài liệu mặc định thay vì để toàn bộ request bị chậm kéo dài.
+  2. Cấu hình Circuit Breaker cho vector store để cô lập lỗi khi database quá tải.
+  3. Bật alert `HighResponseLatencyP95` (đã định nghĩa trong `config/alert_rules.yaml`) để đội On-call nhận thông báo ngay khi P95 vượt 3s liên tục trong 5 phút.
 
 ## 8. Giải thích và tự đánh giá
 
-- **Một quyết định kỹ thuật quan trọng và lý do:**
-- **Một lỗi/blocker đã gặp:**
-- **Cách tìm nguyên nhân và xử lý:**
+- **Một quyết định kỹ thuật quan trọng và lý do:** Đặt processor `scrub_event` trong `structlog.configure` trước `JsonlFileProcessor` và `JSONRenderer`. Quyết định này tuân thủ nguyên tắc Defense in Depth: ngay cả khi code logic của endpoint quên làm sạch dữ liệu đầu vào người dùng, toàn bộ log record vẫn được làm sạch tự động trước khi ghi ra đĩa hoặc serialize thành chuỗi JSON, đảm bảo không thể rò rỉ PII ra môi trường lưu trữ.
+- **Một lỗi/blocker đã gặp:** Khi chạy `validate_logs.py` lần đầu sau khi sửa code, validator vẫn báo lỗi cũ do script đọc toàn bộ file `data/logs.jsonl` bao gồm các dòng log cũ được ghi từ trước khi triển khai PII scrubbing và enrichment.
+- **Cách tìm nguyên nhân và xử lý:** Đọc kỹ hướng dẫn trong `docs/CHECKPOINTS.md` và `docs/GUIDE.md`: thực hiện sao lưu file log cũ thành `data/logs_baseline.jsonl` làm bằng chứng baseline, sau đó xóa `data/logs.jsonl`, khởi động lại API server và chạy lại workload để tạo log hoàn toàn mới.
 - **Cách hiểu luồng Metrics → Logs → Traces:**
+  1. *Metrics*: Cung cấp góc nhìn vĩ mô (Aggregated View) để nhận biết triệu chứng (symptom) và khoảng thời gian xảy ra sự cố (ví dụ P95 latency vượt 3s lúc 09:12Z).
+  2. *Logs*: Cung cấp góc nhìn vi mô (Event View) có ngữ cảnh, giúp lọc ra request cụ thể bị ảnh hưởng trong khoảng thời gian đó và lấy được `correlation_id` (ví dụ `req-a4c32886`).
+  3. *Traces*: Cung cấp góc nhìn phân tán (Execution Waterfall View), dùng `correlation_id` mở trace waterfall để khoanh vùng chính xác span nào gây chậm (ví dụ span `retrieval` mất 2.5s trong khi span `generation` chỉ mất 0.15s).
 - **Vai trò của prompt version, token/cost, SLO hoặc rollback trong vận hành LLM:**
-- **Điều quan trọng nhất đã học:**
-- **Hạn chế hoặc phần chưa hoàn thành, nếu có:**
+  - *Prompt Versioning & Rollback*: Đảm bảo khả năng tái hiện (reproducibility) và an toàn khi thử nghiệm prompt mới; nếu prompt mới gây suy giảm chất lượng, có thể rollback nhãn `production` tức thì trên Langfuse về version trước mà không cần redeploy mã nguồn.
+  - *Token & Cost Monitoring*: Giúp phát hiện sớm các hiện tượng chi phí bùng nổ (cost spike do prompt injection hoặc output token tăng đột biến), kiểm soát ngân sách vận hành mô hình.
+  - *SLO & Error Budget*: Cung cấp thước đo chất lượng định lượng với người dùng, làm cơ sở quyết định khi nào được phép release tính năng mới và khi nào phải đóng băng để khắc phục sự cố.
+- **Điều quan trọng nhất đã học:** Kỹ năng xây dựng hệ thống quan sát toàn diện (Observability) cho ứng dụng AI/LLM: từ việc thiết kế structured logging an toàn PII, gắn kết luồng Correlation ID, đến việc xây dựng cây quan sát cha-con (root, retrieval, generation) trên Langfuse để điều tra sự cố hiệu năng một cách có căn cứ khoa học.
+- **Hạn chế hoặc phần chưa hoàn thành, nếu có:** Hệ thống hiện tại đang sử dụng Fake LLM và RAG giả lập trong khuôn khổ phòng lab; trong môi trường production thực tế, cần tích hợp thêm semantic cache cho RAG và streaming TTFT thực tế qua Server-Sent Events (SSE).
 
 ## 9. Checklist trước khi nộp
 

@@ -1,0 +1,13 @@
+=== INCIDENT METRIC EVIDENCE ===
+Challenge ID: day13-k4-l3a-monitoring-llmops-v1
+Cohort: K4 (K4-L3A)
+Incident: rag_slow
+Time Window: 2026-09-29 09:12:25Z - 09:12:40Z
+
+Metric Observation (from Dashboard & /metrics):
+- Normal Baseline Latency P95: 168.5 ms (well below 3000 ms threshold)
+- Incident Latency P95: 3455.0 ms
+- Incident Latency P99: 3455.0 ms
+- SLO Threshold: p95 <= 3000 ms
+- Metric Status: BREACHED / VIOLATED
+- Symptom: Extreme tail latency spike affecting requests in 'monitoring' feature.
