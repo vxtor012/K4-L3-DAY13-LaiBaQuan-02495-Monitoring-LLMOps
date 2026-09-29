@@ -1,0 +1,17 @@
+=== PII REDACTION EVIDENCE ===
+
+1. Email Redaction:
+Input: "What is your refund policy? My email is student@vinuni.edu.vn"
+Log Line: {"service": "api", "payload": {"message_preview": "What is your refund policy? My email is [REDACTED_EMAIL]"}, "event": "request_received", "user_id_hash": "2055254ee30a", "feature": "qa", "env": "dev", "session_id": "s01", "model": "claude-sonnet-4-5", "correlation_id": "req-62510ac4", "level": "info", "ts": "2026-09-29T08:08:00.811389Z"}
+
+2. Vietnamese Phone Redaction:
+Input: "Here is my phone 0987654321, what should be logged?"
+Log Line: {"service": "api", "payload": {"message_preview": "Here is my phone [REDACTED_PHONE_VN], what should be logged?"}, "event": "request_received", "user_id_hash": "64f6ec689229", "feature": "qa", "env": "dev", "session_id": "s05", "model": "claude-sonnet-4-5", "correlation_id": "req-cdfdb37a", "level": "info", "ts": "2026-09-29T08:08:17.909458Z"}
+
+3. Credit Card Redaction:
+Input: "What is the policy for PII and credit card 4111 1111 1111 1111?"
+Log Line: {"service": "api", "payload": {"message_preview": "What is the policy for PII and credit card [REDACTED_CREDIT_CARD]?"}, "event": "request_received", "user_id_hash": "4d14d5d4f719", "feature": "qa", "env": "dev", "session_id": "s09", "model": "claude-sonnet-4-5", "correlation_id": "req-b1428f6d", "level": "info", "ts": "2026-09-29T08:08:19.469091Z"}
+
+Scrubbing verification via validate_logs.py:
+Potential PII leaks detected: 0
+[PASSED] PII scrubbing
