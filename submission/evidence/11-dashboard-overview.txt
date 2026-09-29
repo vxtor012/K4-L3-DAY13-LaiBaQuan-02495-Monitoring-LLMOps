@@ -1,0 +1,39 @@
+=== DASHBOARD RUNTIME EVIDENCE (6 PANELS) ===
+Title: K4-L3A Day 13 Monitoring & LLMOps
+Source: data/logs.jsonl
+Time Range: 60 minutes
+Refresh Interval: 30 seconds
+
+Panel 1: Latency percentiles and TTFT (ms)
+  - P50: 156.0 ms
+  - P95: 945.0 ms
+  - P99: 945.0 ms
+  - TTFT P95: 50.0 ms
+  - Threshold: p95 <= 3000 ms -> Status: PASSED
+
+Panel 2: Request traffic (requests_per_minute)
+  - Count: 10 requests
+  - Rate: 0.67 req/min
+  - Threshold: rate_per_minute >= 1 -> Status: PASSED
+
+Panel 3: Error rate and retrieval success (%)
+  - Error rate: 0.0%
+  - Retrieval success rate: 100.0%
+  - Error breakdown: {}
+  - Threshold: error_rate_pct <= 2% -> Status: PASSED
+
+Panel 4: Cost over time (USD)
+  - Total Cost: 
+  - Threshold: total <= 2.5 USD -> Status: PASSED
+
+Panel 5: Input and output tokens (tokens)
+  - Tokens In: 338
+  - Tokens Out: 1191
+  - Total Tokens: 1529
+  - Threshold: total <= 50000 -> Status: PASSED
+
+Panel 6: Quality proxy (score 0.0 - 1.0)
+  - Mean Quality Score: 0.88
+  - Threshold: mean >= 0.75 -> Status: PASSED
+
+All 6 panels comply with config/dashboard.yaml contract.

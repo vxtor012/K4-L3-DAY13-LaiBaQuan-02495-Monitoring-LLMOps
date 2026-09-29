@@ -1,0 +1,19 @@
+=== PROMPT PROMOTE & ROLLBACK LIFECYCLE EVIDENCE ===
+Project: day13-k4-l3a-02495
+Prompt Name: day13-chat
+
+1. Baseline Setup:
+   - Version 1: labels=['baseline', 'production']
+   - Version 2: labels=['candidate']
+   - Request with label=baseline executed -> Trace ID: 3925b7ba6df3514a07e6a75f6ac153e1 (used prompt version 1)
+   - Request with label=candidate executed -> Trace ID: 9abad7c461856b4e6b46dadfdcc1eb58 (used prompt version 2)
+
+2. Promotion to Production:
+   - Command: client.update_prompt(name='day13-chat', version=2, new_labels=['candidate', 'production'])
+   - Request with label=production executed -> Trace ID: 5575e5e9c1564661cc59d5f69d3d8f6c (used prompt version 2)
+
+3. Rollback to Version 1:
+   - Command: client.update_prompt(name='day13-chat', version=1, new_labels=['baseline', 'production'])
+   - Request with label=production executed -> Trace ID: 06868b6a9879f3a8680bf9e98b4eed4f (used prompt version 1)
+
+Result: Promotion and rollback confirmed with runtime traces in Langfuse project day13-k4-l3a-02495.

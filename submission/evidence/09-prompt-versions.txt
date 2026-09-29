@@ -1,0 +1,20 @@
+=== LANGFUSE PROMPT VERSIONS ===
+Project: day13-k4-l3a-02495
+Prompt Name: day13-chat
+
+Version 1:
+- Version: 1
+- Labels: ['baseline', 'production']
+- Template:
+Feature={{feature}}
+Docs={{docs}}
+Question={{message}}
+
+Version 2:
+- Version: 2
+- Labels: ['candidate', 'latest']
+- Template:
+Feature={{feature}}
+Docs={{docs}}
+Question={{message}}
+Please provide a concise answer based strictly on the retrieved docs.

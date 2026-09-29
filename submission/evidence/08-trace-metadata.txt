@@ -1,0 +1,14 @@
+=== TRACE METADATA EVIDENCE ===
+Project: day13-k4-l3a-02495
+Trace ID: 06868b6a9879f3a8680bf9e98b4eed4f
+Tags: ['lab', 'qa', 'claude-sonnet-4-5']
+Environment: dev
+
+Trace Context & Metadata:
+- correlation_id: req-trace-...
+- feature: qa
+- model: claude-sonnet-4-5
+- prompt_name: day13-chat
+- prompt_version: 1
+- prompt_source: langfuse
+- PII Sanitization: No raw user PII present in metadata

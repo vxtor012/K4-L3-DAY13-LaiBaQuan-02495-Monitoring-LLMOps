@@ -7,7 +7,7 @@ primary_slo:
     total_event: 'event == "request_received"'
   target_percent: 99.5
   error_budget_percent: 0.5
-  note: Học viên phải giải thích hoặc điều chỉnh ngưỡng bằng baseline của mình.
+  note: "SLO đặt ngưỡng latency_ms <= 3000ms dựa trên baseline thực tế (~400ms). Khi gặp sự cố như RAG slow (+2.5s), latency sẽ tiệm cận hoặc vượt 3000ms. Mục tiêu 99.5% cho phép error budget 0.5% (tối đa 500/100,000 requests vi phạm hoặc lỗi trong cửa sổ 28 ngày) nhằm bảo vệ trải nghiệm người dùng."
 guardrails:
   error_rate_pct_max: 2
   daily_cost_usd_max: 2.5

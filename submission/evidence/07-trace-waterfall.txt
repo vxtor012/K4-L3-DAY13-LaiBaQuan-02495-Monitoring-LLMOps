@@ -1,0 +1,13 @@
+=== TRACE WATERFALL HIERARCHY ===
+Project: day13-k4-l3a-02495
+Trace ID: 06868b6a9879f3a8680bf9e98b4eed4f
+
+Observation Tree:
+lab-agent-run [AGENT] (Root observation)
+  ├── retrieval [RETRIEVER] (Child observation: Knowledge Base search)
+  └── generation [GENERATION] (Child observation: Model claude-sonnet-4-5, input/output tokens, cost)
+
+Detailed Observations in Trace:
+- ID: c6c47fc8a38a7c34 | Type: GENERATION | Name: generation | Latency: 0.152s | Parent: 7ddf628dd3404d55
+- ID: 39bc4c2174a2e84d | Type: RETRIEVER | Name: retrieval | Latency: 0.0s | Parent: 7ddf628dd3404d55
+- ID: 7ddf628dd3404d55 | Type: AGENT | Name: lab-agent-run | Latency: 0.403s | Parent: None
