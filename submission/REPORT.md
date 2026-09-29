@@ -5,7 +5,7 @@
 ## 1. Thông tin học viên
 
 - **Họ và tên:** Lại Bá Quân
-- **MSSV:** 02495
+- **MSSV:** 2A202602495
 - **Lớp:** K4-L3A
 - **Repository URL:** https://github.com/vxtor012/K4-L3-DAY13-LaiBaQuan-02495-Monitoring-LLMOps
 - **Commit SHA cuối:**
@@ -16,34 +16,34 @@
 
 Điền đúng đường dẫn tới evidence thực tế. Có thể đổi tên hoặc dùng nhiều ảnh nếu cần.
 
-| Evidence | Đường dẫn |
-|---|---|
-| Pytest cuối | `evidence/01-pytest.txt` |
-| Log validator | `evidence/02-log-validator.txt` |
+| Evidence            | Đường dẫn                           |
+| ------------------- | --------------------------------------- |
+| Pytest cuối        | `evidence/01-pytest.txt`              |
+| Log validator       | `evidence/02-log-validator.txt`       |
 | Dashboard validator | `evidence/03-dashboard-validator.txt` |
-| Structured log | `evidence/04-structured-log.txt` |
-| PII redaction | `evidence/05-pii-redaction.txt` |
-| Trace list | `evidence/06-trace-list.txt` |
-| Trace waterfall | `evidence/07-trace-waterfall.txt` |
-| Trace metadata | `evidence/08-trace-metadata.txt` |
-| Prompt versions | `evidence/09-prompt-versions.txt` |
-| Prompt rollback | `evidence/10-prompt-rollback.txt` |
-| Dashboard runtime | `evidence/11-dashboard-overview.txt` |
-| Incident metric | `evidence/12-incident-metric.txt` |
-| Incident log | `evidence/13-incident-log.txt` |
-| Incident trace | `evidence/14-incident-trace.txt` |
+| Structured log      | `evidence/04-structured-log.txt`      |
+| PII redaction       | `evidence/05-pii-redaction.txt`       |
+| Trace list          | `evidence/06-trace-list.txt`          |
+| Trace waterfall     | `evidence/07-trace-waterfall.txt`     |
+| Trace metadata      | `evidence/08-trace-metadata.txt`      |
+| Prompt versions     | `evidence/09-prompt-versions.txt`     |
+| Prompt rollback     | `evidence/10-prompt-rollback.txt`     |
+| Dashboard runtime   | `evidence/11-dashboard-overview.txt`  |
+| Incident metric     | `evidence/12-incident-metric.txt`     |
+| Incident log        | `evidence/13-incident-log.txt`        |
+| Incident trace      | `evidence/14-incident-trace.txt`      |
 
 ## 3. Kết quả kỹ thuật
 
-| Nội dung | Baseline | Kết quả cuối | Nhận xét |
-|---|---|---|---|
-| `validate_logs.py` | 30/100 | 100/100 | Đạt tuyệt đối 4 tiêu chí: schema, correlation ID, enrichment context, PII scrubbing |
-| `validate_dashboard.py` | 6/6 panel | 6/6 panel | Hợp lệ dashboard contract 6 panel |
-| `pytest` | 22 passed | 26 passed | Bổ sung các unit test cho CCCD, Credit Card, Correlation ID & Log Enrichment |
-| Số traces hợp lệ | 0 | 19+ traces | Tạo trực tiếp trên project Langfuse cá nhân day13-k4-l3a-02495 |
-| Số PII leak | 0 | 0 | Không có rò rỉ PII nguyên văn |
-| Latency P95 / TTFT P95 | 480ms / 50ms | 945ms / 50ms | Thỏa mãn threshold SLO (P95 <= 3000ms) |
-| Retrieval success rate | 100% | 100% | Toàn bộ truy xuất tài liệu thành công |
+| Nội dung                 | Baseline     | Kết quả cuối | Nhận xét                                                                                 |
+| ------------------------- | ------------ | --------------- | ------------------------------------------------------------------------------------------ |
+| `validate_logs.py`      | 30/100       | 100/100         | Đạt tuyệt đối 4 tiêu chí: schema, correlation ID, enrichment context, PII scrubbing |
+| `validate_dashboard.py` | 6/6 panel    | 6/6 panel       | Hợp lệ dashboard contract 6 panel                                                        |
+| `pytest`                | 22 passed    | 26 passed       | Bổ sung các unit test cho CCCD, Credit Card, Correlation ID & Log Enrichment             |
+| Số traces hợp lệ       | 0            | 19+ traces      | Tạo trực tiếp trên project Langfuse cá nhân day13-k4-l3a-02495                       |
+| Số PII leak              | 0            | 0               | Không có rò rỉ PII nguyên văn                                                        |
+| Latency P95 / TTFT P95    | 480ms / 50ms | 945ms / 50ms    | Thỏa mãn threshold SLO (P95 <= 3000ms)                                                   |
+| Retrieval success rate    | 100%         | 100%            | Toàn bộ truy xuất tài liệu thành công                                               |
 
 ## 4. Logging và PII
 
@@ -91,7 +91,6 @@
   - Alert 2: `HighAPIErrorRate` (Critical, condition: `error_rate_pct > 2%` trong 3 phút, kênh Slack, runbook: `docs/alerts.md#alert-2`) phát hiện tỷ lệ lỗi HTTP 500 tăng cao.
   - Alert 3: `DegradedAnswerQuality` (Warning, condition: `mean(quality_score) < 0.75 or tool_success_rate_pct < 90%` trong 10 phút, kênh Slack, runbook: `docs/alerts.md#alert-3`) phát hiện chất lượng câu trả lời bị suy giảm hoặc truy xuất tài liệu RAG thất bại.
 
-
 ## 7. Điều tra challenge
 
 - **Challenge ID:** `day13-k4-l3a-monitoring-llmops-v1`
@@ -133,10 +132,10 @@
 
 ## 9. Checklist trước khi nộp
 
-- [ ] Kết quả và evidence thuộc commit SHA cuối.
-- [ ] Tất cả ảnh/output mở được bằng đường dẫn tương đối.
-- [ ] Incident evidence nối đúng metric → log → trace.
-- [ ] Trace/prompt evidence thuộc project Langfuse cá nhân và ảnh không lộ key/secret.
-- [ ] Repository chạy lại được theo README.
-- [ ] Không có secret, API key, PII thô hoặc evidence của người khác/lớp khác.
-- [ ] URL repo và commit SHA cuối đã được nộp trên LMS/Codelabs.
+- [X] Kết quả và evidence thuộc commit SHA cuối.
+- [X] Tất cả ảnh/output mở được bằng đường dẫn tương đối.
+- [X] Incident evidence nối đúng metric → log → trace.
+- [X] Trace/prompt evidence thuộc project Langfuse cá nhân và ảnh không lộ key/secret.
+- [X] Repository chạy lại được theo README.
+- [X] Không có secret, API key, PII thô hoặc evidence của người khác/lớp khác.
+- [X] URL repo và commit SHA cuối đã được nộp trên LMS/Codelabs.
